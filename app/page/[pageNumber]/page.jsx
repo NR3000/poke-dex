@@ -1,0 +1,70 @@
+// "use client"
+
+import Link from "next/link"
+import { notFound } from "next/navigation"
+
+// export async function getServerSideProps(){
+//     const pokemonList = await (await fetch(`https://pokeapi.co/api/v2/pokemon?offset=${(page) * 20}&limit=20`)).json()
+//     return {props: {pokemonList}}
+// }
+
+export default async function page({ params: { pageNumber } }) {
+    const page = pageNumber - 1
+
+    try {
+        if (Number.isNaN(page)) throw new Error("No data found.")
+    } catch (error) {
+        notFound()
+    }
+
+    const pokemonList = await (await fetch(`https://pokeapi.co/api/v2/pokemon?offset=${(page) * 20}&limit=20`,{ cache: "no-store"} )).json()
+    const totalPages = Math.round(pokemonList.count / 20)
+
+    // console.log(pokemonList)
+
+    const pageCount = Array(Math.ceil(pokemonList.count / 20)).fill(0).map((e, i) => i + 1)
+    // console.log("current page", page, page <= totalPages)
+    return (
+        <>
+            {
+                pokemonList.results.length === 0 ?
+                    <div className="flex flex-col w-full h-screen items-center justify-center bg-slate-300 gap-8">
+                        <div className="text-3xl font-bold">Data Not found</div>
+                        <Link className="text-sm bg-slate-600 text-white px-4 py-2 rounded-lg" href={"/"}>Goto Home page</Link>
+                    </div>
+                    :
+                    <div className="poke-list-page">
+                        <h1 className="header">Pokemon Data</h1>
+                        <table className="poke-list">
+                            <tbody>
+                                <tr className="poke-list-row">
+                                    <th className="poke-list-srno-title">Sr. No.</th>
+                                    <th className="poke-list-name-title">Name</th>
+                                </tr>
+                                {
+                                    pokemonList.results.map((pokemon, ind) => {
+                                        const srno = (page * 20) + ind + 1
+                                        const name = pokemon.name.substr(0,1).toUpperCase() + pokemon.name.substr(1)
+                                        return (
+                                            <tr key={srno} className="poke-list-row">
+                                                <td className="poke-list-srno">{srno}</td>
+                                                <td className="poke-list-name"><Link href={`/pokemon/${srno}`}>{name}</Link></td>
+                                            </tr>
+                                        )
+                                    })
+                                }
+                            </tbody>
+                        </table>
+                        <div className="page-nav-button-container">
+                            <Link className="page-nav" scroll={false} href={page > 0 ? `/page/${page}` : "#"}>Prev</Link>
+                            <div className="pages">Page {page + 1} of {totalPages}</div>
+                            <Link className="page-nav" scroll={false} href={page < (totalPages - 1) ? `/page/${(page + 1) + 1}` : "#"}>Next</Link>
+                            {/* <div className="pages">
+                                {pageCount.map(number => <Link className="page-number" href={`/page/${number}`} key={number}>{number} </Link>)}
+                            </div> */}
+                        </div>
+                    </div>
+            }
+        </>
+    )
+}
