@@ -1,5 +1,3 @@
-// "use client"
-
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
@@ -17,7 +15,7 @@ export default async function page({ params: { pageNumber } }) {
         notFound()
     }
 
-    const pokemonList = await (await fetch(`https://pokeapi.co/api/v2/pokemon?offset=${(page) * 20}&limit=20`,{ cache: "no-store"} )).json()
+    const pokemonList = await (await fetch(`https://pokeapi.co/api/v2/pokemon?offset=${(page) * 20}&limit=  `,{ cache: "no-store"} )).json()
     const totalPages = Math.round(pokemonList.count / 20)
 
     // console.log(pokemonList)
