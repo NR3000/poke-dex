@@ -1,21 +1,13 @@
-import { LoginButton, LogoutButton, ProfileButton, RegisterButton } from "./button";
+"use client"
+import { SessionProvider} from "next-auth/react";
+import { LoginButton } from "./button";
 
-export default function Home() {
+export default function Login(props) {
     return (
-        <main
-            style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "70vh",
-            }}
-        >
-            <div>
+        <SessionProvider>
+            <main className="flex items-center justify-center h-[70vh]">
                 <LoginButton />
-                <RegisterButton />
-                <LogoutButton />
-                <ProfileButton />
-            </div>
-        </main>
+            </main>
+        </SessionProvider>
     );
 }

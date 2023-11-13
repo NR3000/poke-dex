@@ -18,7 +18,7 @@ export default async function page({ params: { pageNumber } }) {
     const pokemonList = await (await fetch(`https://pokeapi.co/api/v2/pokemon?offset=${(page) * 20}&limit=  `,{ cache: "no-store"} )).json()
     const totalPages = Math.round(pokemonList.count / 20)
 
-    // console.log(pokemonList)
+    console.log("Hello ",process.env.NEXTAUTH_SECRET)
 
     const pageCount = Array(Math.ceil(pokemonList.count / 20)).fill(0).map((e, i) => i + 1)
     // console.log("current page", page, page <= totalPages)

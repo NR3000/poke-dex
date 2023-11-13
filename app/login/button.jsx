@@ -1,32 +1,40 @@
 "use client";
 
 import { signIn, signOut } from "next-auth/react";
-import Link from "next/link";
+import { getSession } from "next-auth/react"
+
+import { useEffect, useState } from "react";
 
 export const LoginButton = () => {
+
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    const login = async () => {
+      const currentSession = await getSession();
+      setSession(currentSession);
+      console.log("login button ", currentSession);
+    };
+    login();
+  }, []);
+
+
   return (
-    <button style={{ marginRight: 10 }} onClick={() => signIn()}>
-      Sign in
-    </button>
-  );
+    <div className="flex gap-8 flex-col">
+      <h1 className="text-3xl">Authentication</h1>
+      <p>Email: {session ? session?.user?.email : "Not Authenticated"}</p>
+      {
+        session ?
+          <button className="bg-rose-600 text-white py-2 px-4 rounded" onClick={() => signOut()}>
+            Sign Out
+          </button>
+          :
+          <button className="bg-slate-500 text-white py-2 px-4 rounded" onClick={() => signIn("github")}>
+            Sign in
+          </button>
+      }
+
+    </div>
+  )
 };
 
-export const RegisterButton = () => {
-  return (
-    <Link href="/register" style={{ marginRight: 10 }}>
-      Register
-    </Link>
-  );
-};
-
-export const LogoutButton = () => {
-  return (
-    <button style={{ marginRight: 10 }} onClick={() => signOut()}>
-      Sign Out
-    </button>
-  );
-};
-
-export const ProfileButton = () => {
-  return <Link href="/profile">Profile</Link>;
-};
