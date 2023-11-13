@@ -29,9 +29,14 @@ export const LoginButton = () => {
             Sign Out
           </button>
           :
+          <>
           <button className="bg-slate-500 text-white py-2 px-4 rounded" onClick={() => signIn("github")}>
-            Sign in
+            Git Sign in
           </button>
+          <button className="bg-slate-500 text-white py-2 px-4 rounded" onClick={() => signIn("google")}>
+            Google Sign in
+          </button>
+          </>
       }
 
     </div>
