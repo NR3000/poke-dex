@@ -1,10 +1,18 @@
+import { getServerSession } from "next-auth"
+import { redirect } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
 
 export default async function page({ params: { id } }) {
 
+  const session = await getServerSession()
+
+  console.log(session)
+
+  if(!session) redirect(`/api/auth/signin`)
+
   try {
-    const poke = await (fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`, { cache: "no-store"}))
+    const poke = await (fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`, { cache: "no-store" }))
     const pokeData = await poke.json()
     // console.log("FrontPokdata", pokeData?.sprites?.other['official-artwork']?.front_default)
     const image = pokeData.sprites.other["official-artwork"].front_default
@@ -13,7 +21,7 @@ export default async function page({ params: { id } }) {
       <div className="poke-data-page">
         <div className="poke-card">
           <div className={`poke-card-image ${image ? "" : "p-8"}`}>
-            <Image className="object-contain" src={image || "/default.png"} alt={pokeData.name} placeholder="blur" fill sizes="100" priority blurDataURL={"/default.png"}/>
+            <Image className="object-contain" src={image || "/default.png"} alt={pokeData.name} placeholder="blur" fill sizes="100" priority blurDataURL={"/default.png"} />
           </div>
           <div className="poke-data"><b>Name:</b> {pokeData.name.substr(0, 1).toUpperCase() + pokeData.name.substr(1)}</div>
           <div className="poke-data"><b>Weight:</b> {pokeData.weight} kg</div>

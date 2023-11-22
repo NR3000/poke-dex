@@ -10,7 +10,7 @@ function useDebounce(data, delay) {
 			setDebounceValue(data)
 		}, delay)
 		return () => {
-			// console.log("debounce useEffect unmount")
+			console.log("debounce useEffect unmount")
 			clearTimeout(timeoutID)
 		}
 	}, [delay, data]);

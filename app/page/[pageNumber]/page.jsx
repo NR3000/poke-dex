@@ -1,5 +1,7 @@
+
+import { getServerSession } from "next-auth"
 import Link from "next/link"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 
 // export async function getServerSideProps(){
 //     const pokemonList = await (await fetch(`https://pokeapi.co/api/v2/pokemon?offset=${(page) * 20}&limit=20`)).json()
@@ -9,16 +11,21 @@ import { notFound } from "next/navigation"
 export default async function page({ params: { pageNumber } }) {
     const page = pageNumber - 1
 
+    const session = await getServerSession()
+
+    if (!session) redirect(`/api/auth/signin`)
+
     try {
+        console.log(session)
         if (Number.isNaN(page)) throw new Error("No data found.")
     } catch (error) {
         notFound()
     }
 
-    const pokemonList = await (await fetch(`https://pokeapi.co/api/v2/pokemon?offset=${(page) * 20}&limit=  `,{ cache: "no-store"} )).json()
+    const pokemonList = await (await fetch(`https://pokeapi.co/api/v2/pokemon?offset=${(page) * 20}&limit=  `, { cache: "no-store" })).json()
     const totalPages = Math.round(pokemonList.count / 20)
 
-    console.log("Hello ",process.env.NEXTAUTH_SECRET)
+    // console.log("Hello ", process.env.NEXTAUTH_SECRET)
 
     const pageCount = Array(Math.ceil(pokemonList.count / 20)).fill(0).map((e, i) => i + 1)
     // console.log("current page", page, page <= totalPages)
@@ -42,7 +49,7 @@ export default async function page({ params: { pageNumber } }) {
                                 {
                                     pokemonList.results.map((pokemon, ind) => {
                                         const srno = (page * 20) + ind + 1
-                                        const name = pokemon.name.substr(0,1).toUpperCase() + pokemon.name.substr(1)
+                                        const name = pokemon.name.substr(0, 1).toUpperCase() + pokemon.name.substr(1)
                                         return (
                                             <tr key={srno} className="poke-list-row">
                                                 <td className="poke-list-srno">{srno}</td>
@@ -55,12 +62,15 @@ export default async function page({ params: { pageNumber } }) {
                         </table>
                         <div className="page-nav-button-container">
                             <Link className="page-nav" scroll={false} href={page > 0 ? `/page/${page}` : "#"}>Prev</Link>
-                            <div className="pages">Page {page + 1} of {totalPages}</div>
+                            <div className="pages-info">Page {page + 1} of {totalPages}</div>
                             <Link className="page-nav" scroll={false} href={page < (totalPages - 1) ? `/page/${(page + 1) + 1}` : "#"}>Next</Link>
-                            {/* <div className="pages">
-                                {pageCount.map(number => <Link className="page-number" href={`/page/${number}`} key={number}>{number} </Link>)}
-                            </div> */}
                         </div>
+                        <section className="inline-flex flex-col mx-auto w-1/2 max-md:w-full">
+                            <h3 className="p-1 w-full text-center font-bold">Pages</h3>
+                            <div className="page-number-container">
+                                {pageCount.map(number => <Link className="page-number" href={`/page/${number}`} key={number}>{number} </Link>)}
+                            </div>
+                        </section>
                     </div>
             }
         </>
