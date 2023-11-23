@@ -2,6 +2,7 @@
 import { getServerSession } from "next-auth"
 import Link from "next/link"
 import { notFound, redirect } from "next/navigation"
+import ExportButton from "../../../components/ExportButton"
 
 // export async function getServerSideProps(){
 //     const pokemonList = await (await fetch(`https://pokeapi.co/api/v2/pokemon?offset=${(page) * 20}&limit=20`)).json()
@@ -29,6 +30,10 @@ export default async function page({ params: { pageNumber } }) {
 
     const pageCount = Array(Math.ceil(pokemonList.count / 20)).fill(0).map((e, i) => i + 1)
     // console.log("current page", page, page <= totalPages)
+
+    const excelData = pokemonList.results
+    const excelHeader = ["Pokemon", "Links"]
+
     return (
         <>
             {
@@ -39,7 +44,10 @@ export default async function page({ params: { pageNumber } }) {
                     </div>
                     :
                     <div className="poke-list-page">
-                        <h1 className="header">Pokemon Data</h1>
+                        <div className="poke-list-page-header">
+                            <h1 className="header">Pokemon List</h1>
+                            <ExportButton fileName={"PokeList-" + pageNumber} header={excelHeader} data={excelData} />
+                        </div>
                         <table className="poke-list">
                             <tbody>
                                 <tr className="poke-list-row">

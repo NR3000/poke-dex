@@ -12,7 +12,6 @@ const nav = [
     { "id": "poke-list-menu", "link": "/page/1", "path": "page", "name": "Poke-List" },
     { "id": "charts-menu", "link": "/charts", "path": "charts", "name": "Charts" },
     { "id": "search-menu", "link": "/search", "path": "search", "name": "Search" },
-    { "id": "sheet-menu", "link": "/sheet", "path": "sheet", "name": "Sheet" },
 ]
 
 const Header = () => {
@@ -33,12 +32,12 @@ const Header = () => {
 
     return (
         <header className="sticky top-0 bg-rose-100 flex items-center h-12 px-4 py-2 justify-between border-b border-red-200">
-            <section className="inline-flex gap-2 items-center">
+            <Link href="/" className="inline-flex gap-2 items-center">
                 <div className="relative w-8 h-8">
                     <Image src={"/default.png"} alt="Logo" fill sizes="32" />
                 </div>
                 <span className="text-2xl">Pokedex</span>
-            </section>
+            </Link>
             <nav>
                 <ul className="inline-flex gap-4">
                     {

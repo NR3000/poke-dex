@@ -6,7 +6,7 @@ import React from "react"
 function page() {
   return (
     <div className="landing-page">
-      <h1>Welcome to pokedex. To view all details you have to sign up.</h1>
+      <h1 className="text-4xl font-bold">Welcome to pokedex.</h1>
     </div>
   )
 }

@@ -9,7 +9,7 @@ export default async function page({ params: { id } }) {
 
   console.log(session)
 
-  if(!session) redirect(`/api/auth/signin`)
+  if (!session) redirect(`/api/auth/signin`)
 
   try {
     const poke = await (fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`, { cache: "no-store" }))
